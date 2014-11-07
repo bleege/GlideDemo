@@ -1,15 +1,24 @@
 package com.tumblr.bleege.glidedemo;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import java.io.File;
 
 public class MainActivity extends ActionBarActivity {
+
+    private static final String TAG = "MainActivity";
+
+    private final static String markerURL = "http://api.tiles.mapbox.com/v3/marker/pin-l-marker+B70101@2x.png";
+    private final static String tileURL = "http://api.tiles.mapbox.com/v3/examples.map-zr0njcqy/0/0/0.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +26,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         ImageView imageView = (ImageView)findViewById(R.id.makiIcon);
-
-        Glide.with(this).load("http://api.tiles.mapbox.com/v3/marker/pin-l-marker+B70101@2x.png").into(imageView);
+        Glide.with(this).load(markerURL).into(imageView);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -40,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.actionLoadTileToCache) {
             // Download Image To Cache
             Toast.makeText(this, "Begin Image Download to cache", Toast.LENGTH_SHORT).show();
+            new DownloadTileToCacheTask().execute(tileURL);
             return true;
         } else if (id == R.id.actionClearDiskCache) {
             Toast.makeText(this, "Clear Disk Cache", Toast.LENGTH_SHORT).show();
@@ -52,4 +60,30 @@ public class MainActivity extends ActionBarActivity {
     public void handleLoadCacheTileButton(View view) {
         Toast.makeText(this, "You've clicked a button!", Toast.LENGTH_LONG).show();
     }
+
+    private class DownloadTileToCacheTask extends AsyncTask<String, Void, File> {
+        @Override
+        protected File doInBackground(String... params) {
+            FutureTarget<File> future = Glide.with(getApplicationContext())
+                    .load(params[0])
+                    .downloadOnly(256, 256);
+
+            File file = null;
+            try {
+                file = future.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return file;
+        }
+
+        @Override
+        protected void onPostExecute(File file) {
+            super.onPostExecute(file);
+            Log.i(TAG, "onPostExcecute with file = '" + file + "'");
+            Toast.makeText(getApplicationContext(), "Finished downloading file to cache", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
