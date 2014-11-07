@@ -53,6 +53,7 @@ public class MainActivity extends ActionBarActivity {
             return true;
         } else if (id == R.id.actionClearDiskCache) {
             Toast.makeText(this, "Clear Disk Cache", Toast.LENGTH_SHORT).show();
+            clearCache();
             return true;
         }
 
@@ -94,4 +95,16 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void clearCache() {
+        Log.w(TAG, "clearing cache");
+        Glide.get(this).clearMemory();
+        File cacheDir = Glide.getPhotoCacheDir(this);
+        if (cacheDir.isDirectory()) {
+            for (File child : cacheDir.listFiles()) {
+                if (!child.delete()) {
+                    Log.w(TAG, "cannot delete: " + child);
+                }
+            }
+        }
+    }
 }
