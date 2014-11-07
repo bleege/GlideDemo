@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -18,7 +16,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView imageView = (ImageView)findViewById(R.id.makiIcon);
 
-        Glide.with(this).load("http://api.tiles.mapbox.com/v4/marker/pin-l+f44@2x.png?access_token=pk.eyJ1IjoiYmxlZWdlIiwiYSI6InRIWGRhQTgifQ.aqpWzaYuYupQd78KaSK_SA").into(imageView);
+        Glide.with(this).load("http://api.tiles.mapbox.com/v3/marker/pin-l-marker+B70101@2x.png").into(imageView);
     }
 
 

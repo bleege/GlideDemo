@@ -13,6 +13,6 @@
         android:contentDescription="Maki Icon Loaded"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:background="#FF0000"/>
+        android:background="#ccff00"/>
 
 </RelativeLayout>
