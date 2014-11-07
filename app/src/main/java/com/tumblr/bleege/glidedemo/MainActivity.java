@@ -47,7 +47,9 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.actionLoadTileToCache) {
             // Download Image To Cache
             Toast.makeText(this, "Begin Image Download to cache", Toast.LENGTH_SHORT).show();
-            new DownloadTileToCacheTask().execute(tileURL);
+            DownloadTileToCacheTask task = new DownloadTileToCacheTask();
+            task.execute(tileURL);
+            task.cancel(true);
             return true;
         } else if (id == R.id.actionClearDiskCache) {
             Toast.makeText(this, "Clear Disk Cache", Toast.LENGTH_SHORT).show();
@@ -76,6 +78,12 @@ public class MainActivity extends ActionBarActivity {
             }
 
             return file;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(getApplicationContext(), "CANCELLED!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
