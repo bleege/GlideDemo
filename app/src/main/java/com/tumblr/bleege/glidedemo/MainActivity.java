@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.FutureTarget;
 import java.io.File;
 
@@ -27,6 +28,10 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView imageView = (ImageView)findViewById(R.id.makiIcon);
         Glide.with(this).load(markerURL).into(imageView);
+
+        ImageView tileView = (ImageView)findViewById(R.id.cacheTileImageView);
+        // Loads image from network if not found in disk cache
+//        Glide.with(this).load(tileURL).diskCacheStrategy(DiskCacheStrategy.ALL).into(tileView);
     }
 
     @Override
