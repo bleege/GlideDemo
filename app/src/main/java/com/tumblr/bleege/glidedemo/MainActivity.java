@@ -13,8 +13,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+
 import java.io.File;
 
 public class MainActivity extends ActionBarActivity {
@@ -33,15 +36,7 @@ public class MainActivity extends ActionBarActivity {
         ImageView imageView = (ImageView)findViewById(R.id.makiIcon);
         Glide.with(this).load(markerURL).into(imageView);
 
-        ImageView tileView = (ImageView)findViewById(R.id.cacheTileImageView);
-        // Loads image from network if not found in disk cache
-//        Glide.with(this).load(tileURL).diskCacheStrategy(DiskCacheStrategy.ALL).into(tileView);
-        Glide.with(this).load(tileURL).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new SimpleTarget<GlideDrawable>(256, 256) {
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                Log.i(TAG, "GlideDrawalble = '" + resource + "'");
-            }
-        });
+        loadImageFromDiskCache();
     }
 
     @Override
@@ -76,7 +71,35 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void handleLoadCacheTileButton(View view) {
-        Toast.makeText(this, "You've clicked a button!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Try to load Image from Disk Cache", Toast.LENGTH_LONG).show();
+        loadImageFromDiskCache();
+    }
+
+    private void loadImageFromDiskCache() {
+        final ImageView tileView = (ImageView)findViewById(R.id.cacheTileImageView);
+        // Loads image from network if not found in disk cache
+//        Glide.with(this).load(tileURL).diskCacheStrategy(DiskCacheStrategy.ALL).into(tileView);
+        Glide.with(this).load(tileURL).diskCacheStrategy(DiskCacheStrategy.SOURCE).listener(new RequestListener<String, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                Log.i(TAG, "Listener onException: " + e.toString());
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                Log.i(TAG, "onResourceReady with resource = " + resource);
+                Log.i(TAG, "onResourceReady from memory cache = " + isFromMemoryCache);
+                return false;
+            }
+        })
+        .into(new SimpleTarget<GlideDrawable>(256, 256) {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                Log.i(TAG, "GlideDrawalble = '" + resource + "'");
+                tileView.setImageDrawable(resource.getCurrent());
+            }
+        });
     }
 
     private class DownloadTileToCacheTask extends AsyncTask<String, Void, File> {
