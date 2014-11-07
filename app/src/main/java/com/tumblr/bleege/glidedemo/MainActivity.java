@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
             Toast.makeText(this, "Begin Image Download to cache", Toast.LENGTH_SHORT).show();
             DownloadTileToCacheTask task = new DownloadTileToCacheTask();
             task.execute(tileURL);
-            task.cancel(true);
+            //task.cancel(true);
             return true;
         } else if (id == R.id.actionClearDiskCache) {
             Toast.makeText(this, "Clear Disk Cache", Toast.LENGTH_SHORT).show();
