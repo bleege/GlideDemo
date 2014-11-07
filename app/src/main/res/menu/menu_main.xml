@@ -3,4 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/actionLoadTileToCache" android:title="@string/action_loadTileToCache"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/actionClearDiskCache" android:title="@string/action_clearDiskCache"
+        android:orderInCategory="200" app:showAsAction="never" />
 </menu>

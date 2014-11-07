@@ -41,6 +41,9 @@ public class MainActivity extends ActionBarActivity {
             // Download Image To Cache
             Toast.makeText(this, "Begin Image Download to cache", Toast.LENGTH_SHORT).show();
             return true;
+        } else if (id == R.id.actionClearDiskCache) {
+            Toast.makeText(this, "Clear Disk Cache", Toast.LENGTH_SHORT).show();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

@@ -3,5 +3,6 @@
 
     <string name="app_name">GlideDemo</string>
     <string name="action_loadTileToCache">Load Tile To Cache</string>
+    <string name="action_clearDiskCache">Clear Disk Cache</string>
 
 </resources>
