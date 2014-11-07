@@ -11,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import java.io.File;
 
 public class MainActivity extends ActionBarActivity {
@@ -25,6 +28,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        clearCache();
 
         ImageView imageView = (ImageView)findViewById(R.id.makiIcon);
         Glide.with(this).load(markerURL).into(imageView);
@@ -32,6 +36,12 @@ public class MainActivity extends ActionBarActivity {
         ImageView tileView = (ImageView)findViewById(R.id.cacheTileImageView);
         // Loads image from network if not found in disk cache
 //        Glide.with(this).load(tileURL).diskCacheStrategy(DiskCacheStrategy.ALL).into(tileView);
+        Glide.with(this).load(tileURL).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new SimpleTarget<GlideDrawable>(256, 256) {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                Log.i(TAG, "GlideDrawalble = '" + resource + "'");
+            }
+        });
     }
 
     @Override
@@ -105,6 +115,7 @@ public class MainActivity extends ActionBarActivity {
         Glide.get(this).clearMemory();
         File cacheDir = Glide.getPhotoCacheDir(this);
         if (cacheDir.isDirectory()) {
+            Log.w(TAG, "Number of files to clear from cache: " + cacheDir.listFiles().length);
             for (File child : cacheDir.listFiles()) {
                 if (!child.delete()) {
                     Log.w(TAG, "cannot delete: " + child);
